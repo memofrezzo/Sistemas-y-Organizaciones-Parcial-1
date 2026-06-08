@@ -1,0 +1,1751 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistemas y Organizaciones · UNNOBA</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --bg2: #13161e;
+    --bg3: #1a1e29;
+    --surface: #1e2330;
+    --surface2: #252b3b;
+    --border: #2e3547;
+    --border-bright: #3d4863;
+    --gold: #d4a24c;
+    --gold-dim: #8a6830;
+    --gold-pale: #f0c97e;
+    --cyan: #4ac2d4;
+    --cyan-dim: #2a7a8a;
+    --green: #4ade80;
+    --green-dim: #1a6640;
+    --red: #f87171;
+    --red-dim: #7a2020;
+    --purple: #a78bfa;
+    --orange: #fb923c;
+    --text: #e2e8f0;
+    --text-dim: #94a3b8;
+    --text-faint: #4a5568;
+    --radius: 12px;
+    --radius-lg: 20px;
+    --shadow: 0 8px 32px rgba(0,0,0,0.4);
+    --shadow-lg: 0 20px 60px rgba(0,0,0,0.6);
+    --glow-gold: 0 0 30px rgba(212,162,76,0.15);
+    --glow-cyan: 0 0 30px rgba(74,194,212,0.15);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    position: relative;
+    padding: 60px 40px 50px;
+    text-align: center;
+    overflow: hidden;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute;
+    top: -80px; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 300px;
+    background: radial-gradient(ellipse, rgba(212,162,76,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.1s forwards;
+  }
+  .header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    font-weight: 900;
+    line-height: 1.1;
+    background: linear-gradient(135deg, #f0c97e 0%, #d4a24c 40%, #a0722a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.25s forwards;
+  }
+  .header-subtitle {
+    font-size: 16px;
+    color: var(--text-dim);
+    font-weight: 300;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.4s forwards;
+  }
+  .header-subtitle span {
+    color: var(--cyan);
+    font-weight: 500;
+  }
+
+  /* ── NAV TABS ── */
+  .tab-nav {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 20px 40px;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: linear-gradient(to bottom, var(--bg) 85%, transparent);
+    padding-top: 16px;
+  }
+  .tab-btn {
+    padding: 10px 24px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-dim);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.02em;
+  }
+  .tab-btn:hover {
+    border-color: var(--border-bright);
+    color: var(--text);
+    transform: translateY(-1px);
+  }
+  .tab-btn.active {
+    background: linear-gradient(135deg, rgba(212,162,76,0.2), rgba(212,162,76,0.08));
+    border-color: var(--gold-dim);
+    color: var(--gold-pale);
+    box-shadow: var(--glow-gold);
+  }
+  .tab-btn .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.7;
+  }
+
+  /* ── SECTIONS ── */
+  .section { display: none; animation: fadeIn 0.4s ease; }
+  .section.active { display: block; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px 80px; }
+
+  /* ── SECTION HEADER ── */
+  .section-hero {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    margin-bottom: 40px;
+    padding: 32px;
+    background: var(--bg2);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .section-hero::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 200px; height: 100%;
+    background: linear-gradient(to left, rgba(212,162,76,0.04), transparent);
+    pointer-events: none;
+  }
+  .section-icon {
+    font-size: 3rem;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 20px rgba(212,162,76,0.3));
+  }
+  .section-hero h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--gold-pale);
+    margin-bottom: 8px;
+  }
+  .section-hero p {
+    color: var(--text-dim);
+    font-size: 14px;
+    max-width: 620px;
+  }
+
+  /* ── CARDS GRID ── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+    border-color: var(--border-bright);
+  }
+  .card-accent-gold { border-left: 3px solid var(--gold); }
+  .card-accent-cyan { border-left: 3px solid var(--cyan); }
+  .card-accent-green { border-left: 3px solid var(--green); }
+  .card-accent-red { border-left: 3px solid var(--red); }
+  .card-accent-purple { border-left: 3px solid var(--purple); }
+
+  .card h3 {
+    font-size: 13px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-icon { font-size: 1.1rem; }
+  .card p, .card li { color: var(--text-dim); font-size: 13.5px; }
+  .card ul { padding-left: 16px; }
+  .card li { margin-bottom: 5px; }
+  .tag {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.08em;
+    margin: 3px 3px 3px 0;
+    font-weight: 500;
+  }
+  .tag-gold { background: rgba(212,162,76,0.15); color: var(--gold-pale); border: 1px solid var(--gold-dim); }
+  .tag-cyan { background: rgba(74,194,212,0.12); color: var(--cyan); border: 1px solid var(--cyan-dim); }
+  .tag-red { background: rgba(248,113,113,0.12); color: var(--red); border: 1px solid var(--red-dim); }
+  .tag-green { background: rgba(74,222,128,0.12); color: var(--green); border: 1px solid var(--green-dim); }
+  .tag-purple { background: rgba(167,139,250,0.12); color: var(--purple); border: 1px solid #6d5cc5; }
+
+  /* ── STEPS ── */
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 32px;
+  }
+  .step {
+    display: flex;
+    gap: 20px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .step:last-child { border-bottom: none; }
+  .step-num {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+    color: var(--bg);
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 0 15px rgba(212,162,76,0.3);
+  }
+  .step-body h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .step-body p, .step-body li { color: var(--text-dim); font-size: 13.5px; }
+  .step-body ul { padding-left: 16px; }
+
+  /* ── RULES PANEL ── */
+  .rules-panel {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 32px;
+  }
+  .rules-panel h3 {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+  .rules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+  }
+  .rule-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 12px;
+    background: var(--surface);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  .rule-check { color: var(--green); font-size: 14px; flex-shrink: 0; margin-top: 2px; }
+  .rule-x { color: var(--red); font-size: 14px; flex-shrink: 0; margin-top: 2px; }
+  .rule-item p { font-size: 12.5px; color: var(--text-dim); line-height: 1.5; }
+
+  /* ── DIVIDER ── */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 40px 0 32px;
+  }
+  .divider-line { flex: 1; height: 1px; background: var(--border); }
+  .divider-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    white-space: nowrap;
+  }
+
+  /* ── DIAGRAM CONTAINERS ── */
+  .diagram-wrapper {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    margin-bottom: 32px;
+    overflow-x: auto;
+  }
+  .diagram-wrapper h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: var(--gold-pale);
+    margin-bottom: 8px;
+  }
+  .diagram-wrapper .enunciado {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-bottom: 28px;
+    padding: 14px 16px;
+    background: var(--surface);
+    border-radius: 8px;
+    border-left: 3px solid var(--cyan);
+    line-height: 1.6;
+  }
+
+  /* ══════════════════════════════════════
+     ORGANIGRAMA SVG
+  ══════════════════════════════════════ */
+  .org-svg-wrap {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+  .org-svg-wrap svg {
+    min-width: 860px;
+    display: block;
+    margin: 0 auto;
+  }
+  .dfd-stage {
+    background: #fff;
+    border: 1px solid #d8d8d8;
+    padding: 0;
+  }
+  .dfd-stage svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .dfd-figure-title {
+    fill: #111;
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 700;
+  }
+  .dfd-figure-text {
+    fill: #2f2f2f;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .dfd-figure-text.small {
+    font-size: 14px;
+  }
+  .dfd-figure-text.tiny {
+    font-size: 13px;
+  }
+  .dfd-entity {
+    fill: #fff;
+    stroke: #111;
+    stroke-width: 2.2;
+    vector-effect: non-scaling-stroke;
+  }
+  .dfd-process {
+    fill: #fff;
+    stroke: #111;
+    stroke-width: 2.2;
+    vector-effect: non-scaling-stroke;
+  }
+  .dfd-store {
+    stroke: #111;
+    stroke-width: 2.2;
+    vector-effect: non-scaling-stroke;
+  }
+  .dfd-arrow-green,
+  .dfd-arrow-red {
+    fill: none;
+    stroke-width: 2.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+  }
+  .dfd-arrow-green { stroke: #17883a; marker-end: url(#dfdArrowGreen); }
+  .dfd-arrow-red { stroke: #d61c1c; marker-end: url(#dfdArrowRed); }
+  .dfd-flow-label {
+    fill: #4b4b4b;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+  }
+
+  /* boxes */
+  .org-box { fill: var(--surface); stroke: var(--border-bright); stroke-width: 1.5; rx: 8; }
+  .org-box-top { fill: rgba(212,162,76,0.15); stroke: var(--gold-dim); stroke-width: 1.5; }
+  .org-box-staff { fill: rgba(74,194,212,0.1); stroke: var(--cyan-dim); stroke-width: 1.5; stroke-dasharray: 5,3; }
+  .org-box-dep { fill: rgba(167,139,250,0.1); stroke: #6d5cc5; stroke-width: 1.5; }
+  .org-box-sec { fill: rgba(74,222,128,0.08); stroke: var(--green-dim); stroke-width: 1.5; }
+
+  .org-line { stroke: var(--border-bright); stroke-width: 1.5; fill: none; }
+  .org-line-staff { stroke: var(--cyan-dim); stroke-width: 1.5; stroke-dasharray: 5,3; fill: none; }
+
+  .org-text { fill: var(--text); font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500; text-anchor: middle; dominant-baseline: middle; }
+  .org-text-top { fill: var(--gold-pale); font-size: 12px; font-weight: 600; }
+  .org-text-staff { fill: var(--cyan); font-size: 10px; }
+  .org-text-dep { fill: var(--purple); font-size: 10px; }
+  .org-text-sec { fill: var(--green); font-size: 10px; }
+  .org-label { fill: var(--text-faint); font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-anchor: middle; }
+
+  /* ══════════════════════════════════════
+     DFD SVG
+  ══════════════════════════════════════ */
+  .dfd-ent { fill: rgba(212,162,76,0.1); stroke: var(--gold-dim); stroke-width: 1.5; }
+  .dfd-proc { fill: rgba(74,194,212,0.1); stroke: var(--cyan-dim); stroke-width: 1.5; }
+  .dfd-store-top { fill: none; stroke: var(--purple); stroke-width: 1.5; }
+  .dfd-store-bot { fill: none; stroke: var(--purple); stroke-width: 1.5; }
+  .dfd-arrow { stroke: var(--red); stroke-width: 1.5; fill: none; marker-end: url(#arrowRed); }
+  .dfd-text { fill: var(--text); font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500; text-anchor: middle; dominant-baseline: middle; }
+  .dfd-text-ent { fill: var(--gold-pale); font-weight: 600; font-size: 12px; }
+  .dfd-text-proc { fill: var(--cyan); font-size: 10px; }
+  .dfd-text-store { fill: var(--purple); font-size: 10px; }
+  .dfd-flow-label { fill: var(--text-dim); font-family: 'DM Sans', sans-serif; font-size: 9px; text-anchor: middle; }
+
+  /* ══════════════════════════════════════
+     LEGEND
+  ══════════════════════════════════════ */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 16px 20px;
+    background: var(--bg3);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .legend-box {
+    width: 28px; height: 18px;
+    border-radius: 3px;
+    border: 1.5px solid;
+    flex-shrink: 0;
+  }
+  .legend-circle {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    border: 1.5px solid;
+    flex-shrink: 0;
+  }
+  .legend-lines {
+    width: 28px; height: 18px;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .legend-lines::before, .legend-lines::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    height: 1.5px;
+    background: var(--purple);
+  }
+  .legend-lines::before { top: 4px; }
+  .legend-lines::after { bottom: 4px; }
+  .legend-arrow {
+    width: 28px; height: 14px;
+    position: relative;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+  }
+  .legend-arrow::before {
+    content: '';
+    flex: 1;
+    height: 1.5px;
+    background: var(--red);
+  }
+  .legend-arrow::after {
+    content: '▶';
+    font-size: 8px;
+    color: var(--red);
+    margin-left: -2px;
+  }
+
+  /* ══════════════════════════════════════
+     FODA
+  ══════════════════════════════════════ */
+  .foda-matrix {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    margin-bottom: 32px;
+    box-shadow: var(--shadow);
+  }
+  .foda-cell {
+    padding: 28px;
+    min-height: 200px;
+  }
+  .foda-cell.fortaleza { background: linear-gradient(135deg, rgba(74,222,128,0.08), rgba(74,222,128,0.04)); border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); }
+  .foda-cell.oportunidad { background: linear-gradient(135deg, rgba(74,194,212,0.08), rgba(74,194,212,0.04)); border-bottom: 1px solid var(--border); }
+  .foda-cell.debilidad { background: linear-gradient(135deg, rgba(248,113,113,0.08), rgba(248,113,113,0.04)); border-right: 1px solid var(--border); }
+  .foda-cell.amenaza { background: linear-gradient(135deg, rgba(251,146,60,0.08), rgba(251,146,60,0.04)); }
+  .foda-cell h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .foda-cell.fortaleza h4 { color: var(--green); }
+  .foda-cell.oportunidad h4 { color: var(--cyan); }
+  .foda-cell.debilidad h4 { color: var(--red); }
+  .foda-cell.amenaza h4 { color: var(--orange); }
+  .foda-cell .sub { font-size: 11px; font-family: 'DM Mono', monospace; letter-spacing: 0.12em; color: var(--text-faint); margin-bottom: 16px; text-transform: uppercase; }
+  .foda-cell ul { padding-left: 0; list-style: none; }
+  .foda-cell li {
+    font-size: 13px;
+    color: var(--text-dim);
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .foda-cell li:last-child { border-bottom: none; }
+  .foda-cell li::before {
+    content: '·';
+    font-size: 18px;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .foda-cell.fortaleza li::before { color: var(--green); }
+  .foda-cell.oportunidad li::before { color: var(--cyan); }
+  .foda-cell.debilidad li::before { color: var(--red); }
+  .foda-cell.amenaza li::before { color: var(--orange); }
+
+  .foda-axis-labels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3px;
+    margin-bottom: 6px;
+  }
+  .foda-axis {
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 6px;
+    border-radius: 6px;
+  }
+  .foda-axis.int { color: var(--green); background: rgba(74,222,128,0.06); border: 1px solid rgba(74,222,128,0.2); }
+  .foda-axis.ext { color: var(--cyan); background: rgba(74,194,212,0.06); border: 1px solid rgba(74,194,212,0.2); }
+
+  /* ══════════════════════════════════════
+     INTERACTIVE EXERCISE
+  ══════════════════════════════════════ */
+  .exercise-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    margin-bottom: 32px;
+  }
+  .exercise-box h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: var(--gold-pale);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    padding: 3px 10px;
+    border-radius: 100px;
+    background: rgba(212,162,76,0.15);
+    border: 1px solid var(--gold-dim);
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+  .scenario {
+    padding: 16px 20px;
+    background: var(--surface);
+    border-radius: 8px;
+    border-left: 3px solid var(--gold);
+    margin-bottom: 24px;
+    font-size: 13.5px;
+    color: var(--text-dim);
+    line-height: 1.7;
+  }
+  .foda-input-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .foda-input-cell {
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .foda-input-header {
+    padding: 10px 16px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .foda-input-cell.f .foda-input-header { background: rgba(74,222,128,0.12); color: var(--green); border-bottom: 1px solid rgba(74,222,128,0.2); }
+  .foda-input-cell.o .foda-input-header { background: rgba(74,194,212,0.12); color: var(--cyan); border-bottom: 1px solid rgba(74,194,212,0.2); }
+  .foda-input-cell.d .foda-input-header { background: rgba(248,113,113,0.12); color: var(--red); border-bottom: 1px solid rgba(248,113,113,0.2); }
+  .foda-input-cell.a .foda-input-header { background: rgba(251,146,60,0.12); color: var(--orange); border-bottom: 1px solid rgba(251,146,60,0.2); }
+  .foda-input-cell textarea {
+    width: 100%; min-height: 100px;
+    background: var(--bg3);
+    border: none;
+    padding: 12px 16px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    resize: vertical;
+    outline: none;
+    line-height: 1.6;
+  }
+  .foda-input-cell textarea::placeholder { color: var(--text-faint); }
+  .btn-reveal {
+    padding: 12px 28px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+    color: var(--bg);
+    border: none;
+    border-radius: 100px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s;
+    box-shadow: 0 4px 20px rgba(212,162,76,0.3);
+  }
+  .btn-reveal:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(212,162,76,0.4);
+  }
+  .answer-reveal {
+    display: none;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    animation: fadeIn 0.5s ease;
+  }
+  .answer-reveal.visible { display: block; }
+  .answer-reveal h4 {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  /* ══════════════════════════════════════
+     ERRORES FRECUENTES
+  ══════════════════════════════════════ */
+  .errors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .error-item {
+    display: flex;
+    gap: 12px;
+    padding: 14px 16px;
+    background: rgba(248,113,113,0.06);
+    border: 1px solid rgba(248,113,113,0.15);
+    border-radius: 10px;
+  }
+  .error-x { color: var(--red); font-size: 16px; flex-shrink: 0; }
+  .error-item p { font-size: 13px; color: var(--text-dim); }
+
+  /* ══════════════════════════════════════
+     TEORÍAS SECTION
+  ══════════════════════════════════════ */
+  .theory-timeline {
+    position: relative;
+    padding-left: 32px;
+    margin-bottom: 32px;
+  }
+  .theory-timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px; top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+  }
+  .theory-item {
+    position: relative;
+    margin-bottom: 28px;
+    padding: 20px 24px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition: border-color 0.2s;
+  }
+  .theory-item::before {
+    content: '';
+    position: absolute;
+    left: -28px;
+    top: 24px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    border: 2px solid var(--gold);
+    background: var(--bg);
+  }
+  .theory-item:hover { border-color: var(--border-bright); }
+  .theory-year {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+  .theory-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .theory-desc { font-size: 13.5px; color: var(--text-dim); margin-bottom: 12px; }
+  .theory-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 3px; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .site-header { padding: 40px 20px 30px; }
+    .section-hero { flex-direction: column; gap: 12px; }
+    .foda-matrix { grid-template-columns: 1fr; }
+    .foda-input-grid { grid-template-columns: 1fr; }
+    .foda-axis-labels { grid-template-columns: 1fr; }
+    .tab-btn { font-size: 12px; padding: 8px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<header class="site-header">
+  <p class="header-eyebrow">UNNOBA · Escuela de Tecnología · Sistemas y Organizaciones</p>
+  <h1 class="header-title">Guía Interactiva</h1>
+  <p class="header-subtitle">Organigramas · Diagramas de Flujo de Datos · Análisis <span>FODA</span></p>
+</header>
+
+<!-- ══ NAV ══ -->
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="showTab('organigramas')"><span class="dot"></span>Organigramas</button>
+  <button class="tab-btn" onclick="showTab('dfd')"><span class="dot"></span>DFD · Nivel 0 y 1</button>
+  <button class="tab-btn" onclick="showTab('foda')"><span class="dot"></span>Análisis FODA</button>
+  <button class="tab-btn" onclick="showTab('teorias')"><span class="dot"></span>Escuelas Administrativas</button>
+</nav>
+
+<!-- ════════════════════════════════════════
+     SECCIÓN 1 — ORGANIGRAMAS
+════════════════════════════════════════ -->
+<section id="organigramas" class="section active">
+<div class="container">
+
+  <div class="section-hero">
+    <div class="section-icon">🏛️</div>
+    <div>
+      <h2>Cómo Hacer Organigramas</h2>
+      <p>Un organigrama muestra la <strong>estructura</strong> de una organización: quién depende de quién, qué áreas existen y cómo se relacionan mediante líneas de autoridad y asesoramiento. No incluye nombres de personas, sino <em>cargos o áreas</em>.</p>
+    </div>
+  </div>
+
+  <!-- Elementos -->
+  <div class="cards-grid">
+    <div class="card card-accent-gold">
+      <h3><span class="card-icon">□</span> <span style="color:var(--gold)">Órganos / Unidades</span></h3>
+      <p>Son las áreas, departamentos, secciones, oficinas, comités, etc. Se representan con <strong>rectángulos</strong>. Nunca se escribe el nombre de una persona, solo el cargo o área.</p>
+      <div style="margin-top:12px">
+        <span class="tag tag-gold">Gerencias</span>
+        <span class="tag tag-gold">Departamentos</span>
+        <span class="tag tag-gold">Secciones</span>
+        <span class="tag tag-gold">Oficinas</span>
+      </div>
+    </div>
+    <div class="card card-accent-cyan">
+      <h3><span class="card-icon">——</span> <span style="color:var(--cyan)">Líneas de Autoridad</span></h3>
+      <p>Líneas <strong>continuas</strong> que unen unidades. La autoridad siempre va de <em>arriba hacia abajo</em>. No hay líneas horizontales que crucen jerarquías. No se usan líneas inclinadas.</p>
+    </div>
+    <div class="card card-accent-purple">
+      <h3><span class="card-icon">- -</span> <span style="color:var(--purple)">Líneas de Asesoramiento</span></h3>
+      <p>Líneas <strong>punteadas</strong> que representan relaciones de apoyo o asesoría (staff). <em>Nunca dan órdenes</em>, solo aconsejan o supervisan. Ej: Comité de Calidad.</p>
+    </div>
+  </div>
+
+  <!-- Reglas -->
+  <div class="rules-panel">
+    <h3>✦ Reglas Clave — Para No Equivocarte</h3>
+    <div class="rules-grid">
+      <div class="rule-item"><span class="rule-check">✓</span><p>La autoridad SIEMPRE va de arriba hacia abajo</p></div>
+      <div class="rule-item"><span class="rule-check">✓</span><p>No hay líneas horizontales que crucen jerarquías</p></div>
+      <div class="rule-item"><span class="rule-check">✓</span><p>Solo cargos o áreas, nunca nombres de personas</p></div>
+      <div class="rule-item"><span class="rule-check">✓</span><p>Todas las unidades del mismo nivel se alinean a la misma altura</p></div>
+      <div class="rule-item"><span class="rule-check">✓</span><p>Las líneas deben ser rectas y en ángulo recto</p></div>
+      <div class="rule-item"><span class="rule-check">✓</span><p>Las líneas punteadas NUNCA dan órdenes, solo asesoran</p></div>
+      <div class="rule-item"><span class="rule-x">✗</span><p>Poner nombres de personas en lugar de cargos</p></div>
+      <div class="rule-item"><span class="rule-x">✗</span><p>Cruzar líneas de autoridad o usar líneas inclinadas</p></div>
+      <div class="rule-item"><span class="rule-x">✗</span><p>Dejar unidades al mismo nivel pero a distinta altura</p></div>
+      <div class="rule-item"><span class="rule-x">✗</span><p>Confundir líneas de asesoramiento con autoridad</p></div>
+    </div>
+  </div>
+
+  <!-- Pasos -->
+  <div class="divider"><div class="divider-line"></div><div class="divider-label">Paso a Paso</div><div class="divider-line"></div></div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body"><h4>Entendé la organización</h4><p>Leé el enunciado completo e identificá cuáles son las áreas principales, qué depende de qué, y dónde hay relaciones de asesoramiento.</p></div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body"><h4>Identificá la máxima autoridad</h4><p>En el ejemplo de clase: Gerencia General. Colocala en el centro si el organigrama es horizontal, o arriba si es vertical.</p></div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body"><h4>Colocá las unidades que dependen directamente de ella</h4><p>Son las gerencias principales al mismo nivel, unidas por líneas de autoridad. Siempre de arriba hacia abajo.</p></div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body"><h4>Desplegá las áreas que dependen de cada gerencia</h4><p>Departamentos, secciones, oficinas. Siempre hacia abajo o hacia la derecha (en horizontal).</p></div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body"><h4>Incorporá relaciones de asesoramiento</h4><p>Si existe un comité o staff, conectalo con línea punteada desde la unidad que asesora.</p></div>
+    </div>
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-body"><h4>Revisá la coherencia</h4><p>Verificá que todas las dependencias estén bien conectadas y que no haya cruces innecesarios.</p></div>
+    </div>
+  </div>
+
+  <!-- Diagrama ejemplo -->
+  <div class="divider"><div class="divider-line"></div><div class="divider-label">Ejemplo Completo</div><div class="divider-line"></div></div>
+
+  <div class="diagram-wrapper">
+    <h3>Organigrama de AgroMecánica S.A. — Organigrama Horizontal</h3>
+    <p class="enunciado">
+      El Gerente General supervisa toda la operación y es asesorado por un Comité de Calidad (staff). Existen tres gerencias: Producción, Comercialización y Recursos Humanos. La Gerencia de Producción tiene los departamentos de Tornería, Ensamblaje y Pintura; del departamento de Ensamblaje dependen las secciones Maquinaria Pesada y Herramientas Ligeras. La Gerencia de Comercialización se divide en Ventas a Mayoristas, Ventas a Consumidor Final y Logística y Distribución. La Gerencia de Recursos Humanos posee las oficinas de Liquidación de Sueldos y Selección de Personal.
+    </p>
+
+    <!-- LEGEND -->
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-box" style="background:rgba(212,162,76,0.15);border-color:var(--gold-dim)"></div>
+        <span>Máxima autoridad</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-box" style="background:var(--surface);border-color:var(--border-bright)"></div>
+        <span>Unidad / Área</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-box" style="background:rgba(74,194,212,0.1);border-color:var(--cyan-dim);border-style:dashed"></div>
+        <span>Staff / Asesoramiento</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-box" style="background:rgba(167,139,250,0.1);border-color:#6d5cc5"></div>
+        <span>Departamento</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-box" style="background:rgba(74,222,128,0.08);border-color:var(--green-dim)"></div>
+        <span>Sección / Oficina</span>
+      </div>
+      <div class="legend-item" style="gap:12px">
+        <div style="width:28px;height:2px;background:var(--border-bright)"></div>
+        <span>Línea de autoridad</span>
+      </div>
+      <div class="legend-item" style="gap:12px">
+        <div style="width:28px;height:2px;background:var(--cyan-dim);border-top:2px dashed var(--cyan-dim)"></div>
+        <span>Línea de asesoramiento</span>
+      </div>
+    </div>
+
+    <div class="org-svg-wrap">
+<svg viewBox="0 0 980 540" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+  <defs>
+    <filter id="glow-gold"><feGaussianBlur stdDeviation="2" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+
+  <!-- ── GERENCIA GENERAL (left anchor) ── -->
+  <rect x="20" y="220" width="130" height="48" rx="8" class="org-box-top" filter="url(#glow-gold)"/>
+  <text x="85" y="239" class="org-text org-text-top" font-size="11">GERENCIA</text>
+  <text x="85" y="255" class="org-text org-text-top" font-size="11">GENERAL</text>
+
+  <!-- ── COMITÉ DE CALIDAD (staff, punteado) ── -->
+  <rect x="20" y="320" width="130" height="44" rx="8" class="org-box-staff"/>
+  <text x="85" y="337" class="org-text org-text-staff" font-size="10">COMITÉ DE</text>
+  <text x="85" y="351" class="org-text org-text-staff" font-size="10">CALIDAD</text>
+  <!-- staff line: vertical from GG bottom to CC top -->
+  <line x1="85" y1="268" x2="85" y2="320" class="org-line-staff"/>
+  <text x="38" y="296" class="org-label" font-size="8.5" fill="#2a7a8a">asesoramiento</text>
+
+  <!-- ── MAIN SPINE from GG right ── -->
+  <line x1="150" y1="244" x2="195" y2="244" class="org-line"/>
+  <!-- vertical spine 195 from y=130 to y=480 -->
+  <line x1="195" y1="110" x2="195" y2="470" class="org-line"/>
+
+  <!-- ══ GERENCIA PRODUCCIÓN ══ -->
+  <line x1="195" y1="130" x2="230" y2="130" class="org-line"/>
+  <rect x="230" y="106" width="130" height="48" rx="8" class="org-box"/>
+  <text x="295" y="125" class="org-text" font-size="10">GERENCIA DE</text>
+  <text x="295" y="141" class="org-text" font-size="10">PRODUCCIÓN</text>
+
+  <!-- vertical for deps -->
+  <line x1="360" y1="130" x2="400" y2="130" class="org-line"/>
+  <line x1="400" y1="60" x2="400" y2="210" class="org-line"/>
+
+  <!-- Tornería -->
+  <line x1="400" y1="60" x2="435" y2="60" class="org-line"/>
+  <rect x="435" y="38" width="115" height="44" rx="7" class="org-box-dep"/>
+  <text x="493" y="55" class="org-text org-text-dep" font-size="10">DEPT.</text>
+  <text x="493" y="69" class="org-text org-text-dep" font-size="10">TORNERÍA</text>
+
+  <!-- Ensamblaje -->
+  <line x1="400" y1="130" x2="435" y2="130" class="org-line"/>
+  <rect x="435" y="108" width="115" height="44" rx="7" class="org-box-dep"/>
+  <text x="493" y="125" class="org-text org-text-dep" font-size="10">DEPT.</text>
+  <text x="493" y="139" class="org-text org-text-dep" font-size="10">ENSAMBLAJE</text>
+
+  <!-- Secciones de Ensamblaje -->
+  <line x1="550" y1="130" x2="590" y2="130" class="org-line"/>
+  <line x1="590" y1="96" x2="590" y2="164" class="org-line"/>
+  <!-- Maquinaria Pesada -->
+  <line x1="590" y1="96" x2="625" y2="96" class="org-line"/>
+  <rect x="625" y="76" width="130" height="40" rx="7" class="org-box-sec"/>
+  <text x="690" y="91" class="org-text org-text-sec" font-size="9.5">SECCIÓN MAQUINARIA</text>
+  <text x="690" y="105" class="org-text org-text-sec" font-size="9.5">PESADA</text>
+  <!-- Herramientas Ligeras -->
+  <line x1="590" y1="164" x2="625" y2="164" class="org-line"/>
+  <rect x="625" y="144" width="130" height="40" rx="7" class="org-box-sec"/>
+  <text x="690" y="159" class="org-text org-text-sec" font-size="9.5">SECCIÓN HERR.</text>
+  <text x="690" y="173" class="org-text org-text-sec" font-size="9.5">LIGERAS</text>
+
+  <!-- Pintura -->
+  <line x1="400" y1="210" x2="435" y2="210" class="org-line"/>
+  <rect x="435" y="188" width="115" height="44" rx="7" class="org-box-dep"/>
+  <text x="493" y="205" class="org-text org-text-dep" font-size="10">DEPT.</text>
+  <text x="493" y="219" class="org-text org-text-dep" font-size="10">PINTURA</text>
+
+  <!-- ══ GERENCIA COMERCIALIZACIÓN ══ -->
+  <line x1="195" y1="290" x2="230" y2="290" class="org-line"/>
+  <rect x="230" y="266" width="130" height="48" rx="8" class="org-box"/>
+  <text x="295" y="284" class="org-text" font-size="10">GERENCIA DE</text>
+  <text x="295" y="300" class="org-text" font-size="10">COMERCIALIZACIÓN</text>
+
+  <line x1="360" y1="290" x2="400" y2="290" class="org-line"/>
+  <line x1="400" y1="248" x2="400" y2="348" class="org-line"/>
+
+  <!-- Ventas Mayoristas -->
+  <line x1="400" y1="248" x2="435" y2="248" class="org-line"/>
+  <rect x="435" y="226" width="130" height="44" rx="7" class="org-box-dep"/>
+  <text x="500" y="243" class="org-text org-text-dep" font-size="9.5">VENTAS A</text>
+  <text x="500" y="257" class="org-text org-text-dep" font-size="9.5">MAYORISTAS</text>
+
+  <!-- Ventas Consumidor -->
+  <line x1="400" y1="290" x2="435" y2="290" class="org-line"/>
+  <rect x="435" y="268" width="130" height="44" rx="7" class="org-box-dep"/>
+  <text x="500" y="285" class="org-text org-text-dep" font-size="9.5">VENTAS A</text>
+  <text x="500" y="299" class="org-text org-text-dep" font-size="9.5">CONSUMIDOR FINAL</text>
+
+  <!-- Logística -->
+  <line x1="400" y1="348" x2="435" y2="348" class="org-line"/>
+  <rect x="435" y="326" width="130" height="44" rx="7" class="org-box-dep"/>
+  <text x="500" y="343" class="org-text org-text-dep" font-size="9.5">DEPT. LOGÍSTICA</text>
+  <text x="500" y="357" class="org-text org-text-dep" font-size="9.5">Y DISTRIBUCIÓN</text>
+
+  <!-- ══ GERENCIA RRHH ══ -->
+  <line x1="195" y1="450" x2="230" y2="450" class="org-line"/>
+  <rect x="230" y="426" width="130" height="48" rx="8" class="org-box"/>
+  <text x="295" y="444" class="org-text" font-size="10">GERENCIA DE</text>
+  <text x="295" y="460" class="org-text" font-size="10">RECURSOS HUMANOS</text>
+
+  <line x1="360" y1="450" x2="400" y2="450" class="org-line"/>
+  <line x1="400" y1="420" x2="400" y2="480" class="org-line"/>
+
+  <!-- Liquidación -->
+  <line x1="400" y1="420" x2="435" y2="420" class="org-line"/>
+  <rect x="435" y="398" width="130" height="44" rx="7" class="org-box-sec"/>
+  <text x="500" y="415" class="org-text org-text-sec" font-size="9.5">OFICINA LIQUIDACIÓN</text>
+  <text x="500" y="429" class="org-text org-text-sec" font-size="9.5">DE SUELDOS</text>
+
+  <!-- Selección -->
+  <line x1="400" y1="480" x2="435" y2="480" class="org-line"/>
+  <rect x="435" y="458" width="130" height="44" rx="7" class="org-box-sec"/>
+  <text x="500" y="475" class="org-text org-text-sec" font-size="9.5">OFICINA SELECCIÓN</text>
+  <text x="500" y="489" class="org-text org-text-sec" font-size="9.5">DE PERSONAL</text>
+
+  <!-- ── LABELS ── -->
+  <text x="85" y="290" class="org-label">STAFF</text>
+  <text x="295" y="96" class="org-label">NIVEL 2</text>
+  <text x="295" y="262" class="org-label">NIVEL 2</text>
+  <text x="295" y="422" class="org-label">NIVEL 2</text>
+  <text x="493" y="34" class="org-label">NIVEL 3</text>
+  <text x="493" y="184" class="org-label">NIVEL 3</text>
+  <text x="690" y="72" class="org-label">NIVEL 4</text>
+  <text x="690" y="140" class="org-label">NIVEL 4</text>
+</svg>
+    </div>
+  </div>
+
+  <!-- Errores frecuentes -->
+  <div class="divider"><div class="divider-line"></div><div class="divider-label">Errores Frecuentes · Evitalos</div><div class="divider-line"></div></div>
+  <div class="errors-grid">
+    <div class="error-item"><span class="error-x">✗</span><p>Poner nombres de personas en lugar de cargos</p></div>
+    <div class="error-item"><span class="error-x">✗</span><p>Cruzar líneas de autoridad entre jerarquías</p></div>
+    <div class="error-item"><span class="error-x">✗</span><p>Usar líneas inclinadas</p></div>
+    <div class="error-item"><span class="error-x">✗</span><p>Dejar unidades al mismo nivel pero a distinta altura</p></div>
+    <div class="error-item"><span class="error-x">✗</span><p>Confundir líneas de asesoramiento con autoridad</p></div>
+    <div class="error-item"><span class="error-x">✗</span><p>Un organigrama muestra estructura, no detalles operativos</p></div>
+  </div>
+
+</div></section>
+
+<!-- ════════════════════════════════════════
+     SECCIÓN 2 — DFD
+════════════════════════════════════════ -->
+<section id="dfd" class="section">
+<div class="container">
+
+  <div class="section-hero">
+    <div class="section-icon">🔀</div>
+    <div>
+      <h2>Diagramas de Flujo de Datos</h2>
+      <p>Un DFD modela <strong>cómo fluye la información</strong> dentro de un sistema: qué entra, qué se procesa, qué se almacena y qué sale. Existen dos niveles: el <span style="color:var(--gold)">Nivel 0</span> (contexto general) y el <span style="color:var(--cyan)">Nivel 1</span> (detalle de los procesos internos).</p>
+    </div>
+  </div>
+
+  <!-- Elementos -->
+  <div class="cards-grid">
+    <div class="card card-accent-gold">
+      <h3><span class="card-icon">□</span> <span style="color:var(--gold)">Entidades Externas</span></h3>
+      <p>Representadas con <strong>rectángulos</strong>. Están <em>fuera</em> del sistema. Generan o reciben información. Se nombran con sustantivos. La Secretaría NO es entidad externa porque es parte del sistema.</p>
+    </div>
+    <div class="card card-accent-cyan">
+      <h3><span class="card-icon">○</span> <span style="color:var(--cyan)">Procesos</span></h3>
+      <p>Representados con <strong>círculos o elipses</strong>. Representan acciones del sistema. <em>Siempre empiezan con verbo en infinitivo + sustantivo</em>. En Nivel 0 hay UN SOLO proceso que representa todo el sistema.</p>
+    </div>
+    <div class="card card-accent-purple">
+        <span>Almac&eacute;n de datos</span>
+      <p>Representados con <strong>líneas paralelas</strong>. Son archivos o bases de datos del sistema. Se nombran con sustantivos en plural o nombre del sistema de archivo. No se muestran en Nivel 0.</p>
+    </div>
+    <div class="card card-accent-red">
+      <h3><span class="card-icon">→</span> <span style="color:var(--red)">Flujos de Datos</span></h3>
+      <p>Representados con <strong>flechas</strong>. Son la información que se mueve. Se nombran con <em>sustantivos (NUNCA verbos)</em>. Indican la dirección del movimiento de la información.</p>
+    </div>
+  </div>
+
+  <!-- Niveles -->
+  <div class="cards-grid" style="grid-template-columns:1fr 1fr;margin-bottom:32px">
+    <div class="card card-accent-gold">
+      <h3 style="color:var(--gold)">Nivel 0 — Contexto</h3>
+      <p>Una "caja negra" del sistema completo. Muestra solo entidades externas y flujos principales. <strong>NO</strong> se muestran procesos internos ni almacenes. UN SOLO proceso que representa todo.</p>
+    </div>
+    <div class="card card-accent-cyan">
+      <h3 style="color:var(--cyan)">Nivel 1 — Detalle</h3>
+        <span>Almac&eacute;n de datos</span>
+    </div>
+  </div>
+
+  <!-- Pasos -->
+  <div class="divider"><div class="divider-line"></div><div class="divider-label">Paso a Paso — Construcción</div><div class="divider-line"></div></div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body"><h4>Leé y entendé el enunciado completo</h4><p>Identificá qué hace el sistema, qué información entra, qué información sale, qué se guarda y qué decisiones se toman. Siempre empezá por entender la historia completa.</p></div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+        <span>Almac&eacute;n de datos</span>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body"><h4>Dibujá el Diagrama de Contexto (Nivel 0)</h4><p>Una sola caja (proceso central). Solo entidades externas y flujos principales. Verificá que los flujos que entran y salen al sistema sean todos los del enunciado.</p></div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+        <span>Almac&eacute;n de datos</span>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+        <span>Almac&eacute;n de datos</span>
+    </div>
+  </div>
+
+  <!-- DFD NIVEL 0 -->
+  <div class="divider"><div class="divider-line"></div><div class="divider-label">Ejemplo: Gestión de Pasantías · Nivel 0</div><div class="divider-line"></div></div>
+
+  <div class="diagram-wrapper">
+    <h3>DFD Nivel 0 — Diagrama de Contexto</h3>
+    <p class="enunciado">
+      Un alumno desea realizar una pasantía y presenta en la Secretaría de Extensión el "Formulario PS-1" y su "Certificado Analítico". Se verifica que el alumno tenga más del 50% de la carrera aprobada. Si no cumple, se emite una "Nota de Rechazo". Si cumple, se genera un "Perfil de Postulante" por duplicado: el original se envía a la Empresa y el duplicado se archiva en "Postulaciones Pendientes". La Empresa evalúa el perfil y devuelve un "Informe de Selección". Si es favorable, se genera un "Convenio de Pasantía" por triplicado.
+    </p>
+
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-box" style="background:rgba(212,162,76,0.15);border-color:var(--gold-dim)"></div>
+        <span>Entidad externa (rectángulo)</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-circle" style="background:rgba(74,194,212,0.1);border-color:var(--cyan-dim)"></div>
+        <span>Proceso (círculo)</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-arrow"></div>
+        <span>Flujo de datos</span>
+      </div>
+    </div>
+
+    <div class="org-svg-wrap dfd-stage">
+<svg viewBox="0 0 980 450" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;min-width:980px">
+  <defs>
+    <pattern id="dfdGrid0" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M 24 0 L 0 0 0 24" fill="none" stroke="#ececec" stroke-width="1"/>
+    </pattern>
+    <pattern id="dfdGrid0Big" width="120" height="120" patternUnits="userSpaceOnUse">
+      <rect width="120" height="120" fill="url(#dfdGrid0)"/>
+      <path d="M 120 0 L 0 0 0 120" fill="none" stroke="#dfdfdf" stroke-width="1.1"/>
+    </pattern>
+    <marker id="dfdArrowGreen" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L0,10 L10,5 z" fill="#17883a"/>
+    </marker>
+    <marker id="dfdArrowRed" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L0,10 L10,5 z" fill="#d61c1c"/>
+    </marker>
+  </defs>
+
+  <rect width="980" height="450" fill="#fff"/>
+  <rect width="980" height="450" fill="url(#dfdGrid0Big)"/>
+
+  <text x="96" y="418" class="dfd-figure-title" style="font-size:52px;font-weight:900;">NIVEL 0</text>
+
+  <!-- ALUMNO -->
+  <rect x="12" y="160" width="162" height="54" rx="7" class="dfd-entity"/>
+  <text x="93" y="191" text-anchor="middle" class="dfd-figure-text">ALUMNO</text>
+
+  <!-- EMPRESA -->
+  <rect x="790" y="160" width="162" height="54" rx="7" class="dfd-entity"/>
+  <text x="871" y="191" text-anchor="middle" class="dfd-figure-text">EMPRESA</text>
+
+  <!-- 0. GESTIONAR PASANTIAS -->
+  <ellipse cx="490" cy="160" rx="78" ry="66" class="dfd-process"/>
+  <text x="490" y="150" text-anchor="middle" class="dfd-figure-text" style="font-size:17px;">0.GESTIONAR</text>
+  <text x="490" y="172" text-anchor="middle" class="dfd-figure-text" style="font-size:17px;">PASANT&Iacute;AS</text>
+
+  <!-- Alumno -> proceso -->
+  <path d="M 174 187 L 412 187" class="dfd-arrow-green"/>
+  <text x="293" y="155" text-anchor="middle" class="dfd-flow-label">FORM PS1 + CERTIFICADO</text>
+  <text x="293" y="175" text-anchor="middle" class="dfd-flow-label">ANAL&Iacute;TICO</text>
+
+  <!-- Proceso -> Alumno -->
+  <path d="M 490 94 L 490 48 L 93 48 L 93 160" class="dfd-arrow-green"/>
+  <text x="292" y="20" text-anchor="middle" class="dfd-flow-label">CONVENIO DE PASANT&Iacute;A</text>
+  <text x="292" y="40" text-anchor="middle" class="dfd-flow-label">(duplicado)</text>
+
+  <!-- Proceso -> Empresa -->
+  <path d="M 568 187 L 790 187" class="dfd-arrow-green"/>
+  <text x="679" y="153" text-anchor="middle" class="dfd-flow-label">PERFIL POSTULANTE</text>
+  <text x="679" y="173" text-anchor="middle" class="dfd-flow-label">(original)</text>
+
+  <!-- Empresa -> Proceso -->
+  <path d="M 871 160 L 871 90 L 568 90 L 568 95" class="dfd-arrow-green"/>
+  <text x="720" y="74" text-anchor="middle" class="dfd-flow-label">INFORME DE SELECCI&Oacute;N</text>
+
+  <!-- Proceso -> Empresa (triplicado) -->
+  <path d="M 490 226 L 490 286 L 670 286 L 670 187 L 790 187" class="dfd-arrow-green"/>
+  <text x="625" y="305" text-anchor="middle" class="dfd-flow-label">CONVENIO DE PASANT&Iacute;A</text>
+  <text x="625" y="325" text-anchor="middle" class="dfd-flow-label">(triplicado)</text>
+
+  <!-- Proceso -> Alumno (rechazo) -->
+  <path d="M 412 226 L 412 342 L 93 342 L 93 214" class="dfd-arrow-green"/>
+  <text x="302" y="304" text-anchor="middle" class="dfd-flow-label">NOTA DE</text>
+  <text x="302" y="324" text-anchor="middle" class="dfd-flow-label">RECHAZO</text>
+</svg>
+    </div>
+  </div>
+
+    <!-- DFD NIVEL 1 -->
+  <div class="divider"><div class="divider-line"></div><div class="divider-label">Ejemplo: Gesti&oacute;n de Pasant&iacute;as · Nivel 1</div><div class="divider-line"></div></div>
+
+  <div class="diagram-wrapper">
+    <h3>DFD Nivel 1 — Detalle de Procesos</h3>
+    <p class="enunciado">Se descompone "Gestionar Pasant&iacute;as" en tres procesos. Se agregan los almacenes: Historial Acad&eacute;mico, Postulaciones Pendientes y Convenios Activos.</p>
+
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-box" style="background:rgba(212,162,76,0.15);border-color:var(--gold-dim)"></div>
+        <span>Entidad externa</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-circle" style="background:rgba(74,194,212,0.1);border-color:var(--cyan-dim)"></div>
+        <span>Proceso</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-lines"></div>
+        <span>Almac&eacute;n de datos</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-arrow"></div>
+        <span>Flujo de datos</span>
+      </div>
+    </div>
+
+    <div class="org-svg-wrap dfd-stage">
+<svg viewBox="0 0 1830 700" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;min-width:1830px">
+  <defs>
+    <pattern id="dfdGrid1" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M 24 0 L 0 0 0 24" fill="none" stroke="#ececec" stroke-width="1"/>
+    </pattern>
+    <pattern id="dfdGrid1Big" width="120" height="120" patternUnits="userSpaceOnUse">
+      <rect width="120" height="120" fill="url(#dfdGrid1)"/>
+      <path d="M 120 0 L 0 0 0 120" fill="none" stroke="#dfdfdf" stroke-width="1.1"/>
+    </pattern>
+    <marker id="dfdArrowRed" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L0,10 L10,5 z" fill="#d61c1c"/>
+    </marker>
+  </defs>
+
+  <rect width="1830" height="700" fill="#fff"/>
+  <rect width="1830" height="700" fill="url(#dfdGrid1Big)"/>
+
+  <text x="82" y="46" class="dfd-figure-title" style="font-size:54px;font-weight:900;">NIVEL 1</text>
+
+  <!-- ENTIDADES -->
+  <rect x="10" y="150" width="172" height="68" rx="7" class="dfd-entity"/>
+  <text x="96" y="190" text-anchor="middle" class="dfd-figure-text">ALUMNO</text>
+
+  <rect x="1178" y="150" width="172" height="68" rx="7" class="dfd-entity"/>
+  <text x="1264" y="190" text-anchor="middle" class="dfd-figure-text">EMPRESA</text>
+
+  <!-- PROCESOS -->
+  <ellipse cx="500" cy="185" rx="88" ry="70" class="dfd-process"/>
+  <text x="500" y="165" text-anchor="middle" class="dfd-figure-text small">1.1</text>
+  <text x="500" y="188" text-anchor="middle" class="dfd-figure-text small" style="font-weight:600;">VERIFICAR</text>
+  <text x="500" y="210" text-anchor="middle" class="dfd-figure-text small" style="font-weight:600;">REQUISITOS</text>
+
+  <ellipse cx="830" cy="185" rx="88" ry="70" class="dfd-process"/>
+  <text x="830" y="165" text-anchor="middle" class="dfd-figure-text small">1.2</text>
+  <text x="830" y="188" text-anchor="middle" class="dfd-figure-text small" style="font-weight:600;">GESTIONAR</text>
+  <text x="830" y="210" text-anchor="middle" class="dfd-figure-text small" style="font-weight:600;">POSTULACI&Oacute;N</text>
+
+  <ellipse cx="1550" cy="185" rx="88" ry="70" class="dfd-process"/>
+  <text x="1550" y="165" text-anchor="middle" class="dfd-figure-text small">1.3</text>
+  <text x="1550" y="188" text-anchor="middle" class="dfd-figure-text small" style="font-weight:600;">EMITIR</text>
+  <text x="1550" y="210" text-anchor="middle" class="dfd-figure-text small" style="font-weight:600;">CONVENIO</text>
+
+  <!-- ALMACENES -->
+  <line x1="226" y1="490" x2="376" y2="490" class="dfd-store"/>
+  <line x1="226" y1="506" x2="376" y2="506" class="dfd-store"/>
+  <text x="301" y="500" text-anchor="middle" class="dfd-figure-text tiny">HISTORIAL</text>
+  <text x="301" y="520" text-anchor="middle" class="dfd-figure-text tiny">ACAD&Eacute;MICO</text>
+
+  <line x1="750" y1="490" x2="910" y2="490" class="dfd-store"/>
+  <line x1="750" y1="506" x2="910" y2="506" class="dfd-store"/>
+  <text x="830" y="500" text-anchor="middle" class="dfd-figure-text tiny">POSTULACIONES</text>
+  <text x="830" y="520" text-anchor="middle" class="dfd-figure-text tiny">PENDIENTES</text>
+
+  <line x1="1490" y1="490" x2="1670" y2="490" class="dfd-store"/>
+  <line x1="1490" y1="506" x2="1670" y2="506" class="dfd-store"/>
+  <text x="1580" y="500" text-anchor="middle" class="dfd-figure-text tiny">CONVENIOS ACTIVOS</text>
+
+  <!-- FLUJOS -->
+  <path d="M 182 184 L 412 184" class="dfd-arrow-red"/>
+  <text x="297" y="146" text-anchor="middle" class="dfd-flow-label">FORM PS1 + CERTIFICADO</text>
+  <text x="297" y="166" text-anchor="middle" class="dfd-flow-label">ANAL&Iacute;TICO</text>
+
+  <path d="M 500 115 L 500 58 L 84 58 L 84 150" class="dfd-arrow-red"/>
+  <text x="355" y="38" text-anchor="middle" class="dfd-flow-label">NOTA DE RECHAZO</text>
+
+  <path d="M 408 185 C 360 225, 336 350, 296 490" class="dfd-arrow-red"/>
+  <text x="220" y="340" text-anchor="middle" class="dfd-flow-label">DATOS ACAD&Eacute;MICOS /</text>
+  <text x="220" y="362" text-anchor="middle" class="dfd-flow-label">PORC. CARRERA</text>
+
+  <path d="M 588 184 L 742 184" class="dfd-arrow-red"/>
+
+  <path d="M 830 255 L 830 490" class="dfd-arrow-red"/>
+  <text x="705" y="365" text-anchor="start" class="dfd-flow-label">PERFIL DEL</text>
+  <text x="705" y="387" text-anchor="start" class="dfd-flow-label">POSTULANTE</text>
+  <text x="705" y="409" text-anchor="start" class="dfd-flow-label">(duplicado)</text>
+
+  <path d="M 916 184 L 1178 184" class="dfd-arrow-red"/>
+  <text x="1047" y="156" text-anchor="middle" class="dfd-flow-label">PERFIL DEL</text>
+  <text x="1047" y="178" text-anchor="middle" class="dfd-flow-label">POSTULANTE</text>
+  <text x="1047" y="200" text-anchor="middle" class="dfd-flow-label">(original)</text>
+
+  <path d="M 1332 184 L 1462 184" class="dfd-arrow-red"/>
+  <text x="1397" y="150" text-anchor="middle" class="dfd-flow-label">INFORME DE SELECCI&Oacute;N</text>
+  <text x="1397" y="172" text-anchor="middle" class="dfd-flow-label">FAVORABLE</text>
+
+  <path d="M 910 490 C 1070 490, 1200 390, 1460 254" class="dfd-arrow-red"/>
+  <text x="1148" y="360" text-anchor="middle" class="dfd-flow-label">DATOS DE LA POSTULACI&Oacute;N</text>
+
+  <path d="M 1550 255 L 1550 490" class="dfd-arrow-red"/>
+  <text x="1590" y="360" text-anchor="start" class="dfd-flow-label">CONVENIO DE PASANT&Iacute;A</text>
+  <text x="1590" y="382" text-anchor="start" class="dfd-flow-label">(triplicado)</text>
+
+  <path d="M 1648 184 L 1648 620 L 98 620 L 98 218" class="dfd-arrow-red"/>
+  <text x="905" y="655" text-anchor="middle" class="dfd-flow-label">CONVENIO DE PASANT&Iacute;A (duplicado)</text>
+
+</svg>
+    </div>
+  </div>
+
+  <!-- Errores -->
+  <div class="divider"><div class="divider-line"></div><div class="divider-label">Errores Frecuentes — DFD</div><div class="divider-line"></div></div>
+  <div class="errors-grid">
+    <div class="error-item"><span class="error-x">✗</span><p>Usar verbos en los flujos de datos (ej: "verificar alumno")</p></div>
+    <div class="error-item"><span class="error-x">✗</span><p>Dibujar departamentos internos como entidades externas</p></div>
+    <div class="error-item"><span class="error-x">✗</span><p>Conectar entidades externas con almacenes directamente</p></div>
+    <div class="error-item"><span class="error-x">✗</span><p>No mostrar los almacenes en el Nivel 1</p></div>
+    <div class="error-item"><span class="error-x">✗</span><p>Poner más de un proceso en el Nivel 0</p></div>
+    <div class="error-item"><span class="error-x">✗</span><p>Cambiar los flujos de entrada/salida con respecto al Nivel 0</p></div>
+        <span>Almac&eacute;n de datos</span>
+    <div class="error-item"><span class="error-x">✗</span><p>Usar nombres ambiguos: "Datos", "Info", "Registro"</p></div>
+  </div>
+
+</div></section>
+
+<!-- ════════════════════════════════════════
+     SECCIÓN 3 — FODA
+════════════════════════════════════════ -->
+<section id="foda" class="section">
+<div class="container">
+
+  <div class="section-hero">
+    <div class="section-icon">🔍</div>
+    <div>
+      <h2>Análisis FODA</h2>
+      <p>El análisis FODA es una herramienta de diagnóstico organizacional que evalúa <strong>factores internos</strong> (Fortalezas y Debilidades) y <strong>factores externos</strong> (Oportunidades y Amenazas). Se conecta directamente con el <span style="color:var(--gold)">subsistema de Adaptación</span> y los sistemas de <span style="color:var(--cyan)">dirección y control</span> vistos en la Unidad 5.</p>
+    </div>
+  </div>
+
+  <!-- Info cards -->
+  <div class="cards-grid">
+    <div class="card card-accent-green">
+      <h3 style="color:var(--green)">🟢 Fortalezas</h3>
+      <p><strong>Internas — positivas.</strong> Capacidades, recursos y ventajas que posee la organización. Relacionadas con el <em>subsistema técnico</em>, el capital humano y los procesos productivos eficientes.</p>
+    </div>
+    <div class="card card-accent-cyan">
+      <h3 style="color:var(--cyan)">🔵 Oportunidades</h3>
+      <p><strong>Externas — positivas.</strong> Factores del entorno que la organización puede aprovechar. Relacionadas con los <em>factores ambientales</em> (tecnológicos, económicos, sociales, legales) del modelo de Katz y Rozensweig.</p>
+    </div>
+    <div class="card card-accent-red">
+      <h3 style="color:var(--red)">🔴 Debilidades</h3>
+      <p><strong>Internas — negativas.</strong> Limitaciones o carencias que impiden el crecimiento. Pueden estar en el subsistema de RRHH, en los procesos de producción, o en la estructura organizacional.</p>
+    </div>
+    <div class="card card-accent-gold">
+      <h3 style="color:var(--orange)">🟠 Amenazas</h3>
+      <p><strong>Externas — negativas.</strong> Factores del contexto que pueden perjudicar a la organización. Se vinculan con los factores culturales, políticos, legales, económicos y competitivos del entorno.</p>
+    </div>
+  </div>
+
+  <!-- Ejemplo FODA completo -->
+  <div class="divider"><div class="divider-line"></div><div class="divider-label">Ejemplo Completo — Empresa Manufacturera</div><div class="divider-line"></div></div>
+
+  <div class="foda-axis-labels">
+    <div class="foda-axis int">🏠 Factores Internos</div>
+    <div class="foda-axis ext">🌍 Factores Externos</div>
+  </div>
+
+  <div class="foda-matrix">
+    <div class="foda-cell fortaleza">
+      <h4>💪 Fortalezas</h4>
+      <p class="sub">Interno · Positivo</p>
+      <ul>
+        <li>Personal técnico altamente capacitado en el subsistema de producción</li>
+        <li>Procesos productivos automatizados con tecnología propia (I+D+i)</li>
+        <li>Sistema Just-in-Time implementado: cero stock, cero desperdicio</li>
+        <li>Sólida gestión de RRHH: baja rotación, alto índice de retención</li>
+        <li>Sistema de control de calidad certificado bajo normas ISO 9000</li>
+        <li>Estructura organizacional clara con líneas de autoridad bien definidas</li>
+      </ul>
+    </div>
+    <div class="foda-cell oportunidad">
+      <h4>🚀 Oportunidades</h4>
+      <p class="sub">Externo · Positivo</p>
+      <ul>
+        <li>Expansión del mercado regional: demanda creciente de productos industriales</li>
+        <li>Nuevas tecnologías de automatización disponibles a menor costo</li>
+        <li>Programas de capacitación financiados por el Estado</li>
+        <li>Apertura de nuevos canales de comercialización digitales</li>
+        <li>Normativa ambiental que favorece a empresas con procesos limpios</li>
+        <li>Acceso a financiamiento para PyMEs a través de organismos nacionales</li>
+      </ul>
+    </div>
+    <div class="foda-cell debilidad">
+      <h4>⚠️ Debilidades</h4>
+      <p class="sub">Interno · Negativo</p>
+      <ul>
+        <li>Escasa presencia en canales de venta digital (subsistema comercial débil)</li>
+        <li>Dependencia de un único proveedor para materias primas clave</li>
+        <li>Sistema de información desactualizado, sin integración entre subsistemas</li>
+        <li>Alta concentración de decisiones: falta de delegación en mandos medios</li>
+        <li>Capacidad de producción al límite en temporada alta</li>
+        <li>Resistencia al cambio en el personal de mayor antigüedad</li>
+      </ul>
+    </div>
+    <div class="foda-cell amenaza">
+      <h4>⚡ Amenazas</h4>
+      <p class="sub">Externo · Negativo</p>
+      <ul>
+        <li>Ingreso de competidores internacionales con costos más bajos</li>
+        <li>Inestabilidad económica: inflación que afecta los costos de insumos</li>
+        <li>Cambios en la normativa laboral que incrementan costos operativos</li>
+        <li>Escasez de perfiles técnicos especializados en el mercado laboral</li>
+        <li>Variaciones en el tipo de cambio que afectan importaciones</li>
+        <li>Avance tecnológico acelerado: riesgo de obsolescencia de equipos</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Ejercicio interactivo -->
+  <div class="divider"><div class="divider-line"></div><div class="divider-label">Ejercicio Práctico · Completá el FODA</div><div class="divider-line"></div></div>
+
+  <div class="exercise-box">
+    <h3>Empresa "TechServ S.A." <span class="badge">Ejercicio</span></h3>
+    <p class="enunciado">
+      TechServ S.A. es una empresa de servicios de soporte técnico que opera desde hace 10 años en la provincia de Buenos Aires. Cuenta con 45 empleados especializados en sistemas informáticos y redes. Tiene contratos con municipios y empresas medianas. Su principal debilidad es la falta de presencia en el interior del país y que sus procesos de atención al cliente aún son manuales. El contexto actual muestra un crecimiento en la demanda de servicios de ciberseguridad y una nueva ley de protección de datos que obliga a las empresas a contratar servicios como los que ofrece TechServ. Sin embargo, hay varias startups tecnológicas nuevas que ofrecen servicios similares a menor precio.
+    </p>
+    <p style="font-size:13px;color:var(--text-dim);margin-bottom:20px">Completá el análisis FODA para TechServ S.A. antes de ver la respuesta:</p>
+
+    <div class="foda-input-grid">
+      <div class="foda-input-cell f">
+        <div class="foda-input-header">💪 Fortalezas (interno · positivo)</div>
+        <textarea placeholder="Ej: Personal especializado con 10 años de experiencia..."></textarea>
+      </div>
+      <div class="foda-input-cell o">
+        <div class="foda-input-header">🚀 Oportunidades (externo · positivo)</div>
+        <textarea placeholder="Ej: Crecimiento del mercado de ciberseguridad..."></textarea>
+      </div>
+      <div class="foda-input-cell d">
+        <div class="foda-input-header">⚠️ Debilidades (interno · negativo)</div>
+        <textarea placeholder="Ej: Procesos de atención al cliente manuales..."></textarea>
+      </div>
+      <div class="foda-input-cell a">
+        <div class="foda-input-header">⚡ Amenazas (externo · negativo)</div>
+        <textarea placeholder="Ej: Startups con precios más competitivos..."></textarea>
+      </div>
+    </div>
+
+    <button class="btn-reveal" onclick="revealFoda()">Ver Respuesta Sugerida ✦</button>
+
+    <div class="answer-reveal" id="fodaAnswer">
+      <h4>✦ Respuesta Sugerida</h4>
+      <div class="foda-matrix" style="margin-bottom:0">
+        <div class="foda-cell fortaleza">
+          <h4 style="font-size:0.95rem">💪 Fortalezas</h4>
+          <ul>
+            <li>10 años de trayectoria y experiencia en el rubro</li>
+            <li>45 empleados especializados en sistemas y redes</li>
+            <li>Contratos vigentes con municipios y empresas medianas (cartera estable)</li>
+            <li>Conocimiento profundo del mercado regional bonaerense</li>
+          </ul>
+        </div>
+        <div class="foda-cell oportunidad">
+          <h4 style="font-size:0.95rem">🚀 Oportunidades</h4>
+          <ul>
+            <li>Crecimiento sostenido de la demanda de servicios de ciberseguridad</li>
+            <li>Nueva ley de protección de datos que obliga a contratar servicios TI</li>
+            <li>Expansión posible hacia el interior del país</li>
+            <li>Digitalización de municipios y organismos públicos</li>
+          </ul>
+        </div>
+        <div class="foda-cell debilidad">
+          <h4 style="font-size:0.95rem">⚠️ Debilidades</h4>
+          <ul>
+            <li>Ausencia de presencia en el interior del país</li>
+            <li>Procesos de atención al cliente aún manuales (sin automatización)</li>
+            <li>Posible dependencia excesiva de contratos con el sector público</li>
+            <li>Sin plataforma digital propia para la gestión de clientes (CRM)</li>
+          </ul>
+        </div>
+        <div class="foda-cell amenaza">
+          <h4 style="font-size:0.95rem">⚡ Amenazas</h4>
+          <ul>
+            <li>Ingreso de startups tecnológicas con menores costos operativos</li>
+            <li>Volatilidad económica que afecta presupuestos de TI de los clientes</li>
+            <li>Dificultad para retener talentos técnicos frente a empresas multinacionales</li>
+            <li>Cambios tecnológicos acelerados que exigen constante actualización</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div></section>
+
+<!-- ════════════════════════════════════════
+     SECCIÓN 4 — TEORÍAS / ESCUELAS
+════════════════════════════════════════ -->
+<section id="teorias" class="section">
+<div class="container">
+
+  <div class="section-hero">
+    <div class="section-icon">📚</div>
+    <div>
+      <h2>Escuelas del Pensamiento Administrativo</h2>
+      <p>Desde la Revolución Industrial surgió la necesidad de modelos para administrar las organizaciones. Las primeras teorías "formales" de administración aparecen a finales del siglo XIX. Cada escuela aporta una perspectiva distinta sobre el problema central de la organización.</p>
+    </div>
+  </div>
+
+  <div class="theory-timeline">
+
+    <div class="theory-item">
+      <div class="theory-year">1723 – 1790</div>
+      <div class="theory-name">Adam Smith — Economía Política</div>
+      <p class="theory-desc">Sentó las bases del pensamiento económico moderno. Destacó la <strong>división y especialización del trabajo</strong> como principal fuente de eficiencia productiva, y la importancia de la <strong>libre competencia</strong> para el funcionamiento del mercado.</p>
+      <div class="theory-tags">
+        <span class="tag tag-gold">División del trabajo</span>
+        <span class="tag tag-gold">Libre competencia</span>
+        <span class="tag tag-gold">Especialización</span>
+      </div>
+    </div>
+
+    <div class="theory-item">
+      <div class="theory-year">1792 – 1871</div>
+      <div class="theory-name">Charles Babbage — Precursor Industrial</div>
+      <p class="theory-desc">Matemático de Cambridge que vinculó la universidad con los problemas de la industria. Declaró que <em>"existen principios definidos de la administración que pueden determinarse mediante la experiencia"</em>. Pionero de la línea de montaje y padre de la computación.</p>
+      <div class="theory-tags">
+        <span class="tag tag-cyan">Principios administrativos</span>
+        <span class="tag tag-cyan">Ingeniería industrial</span>
+        <span class="tag tag-cyan">División del trabajo</span>
+      </div>
+    </div>
+
+    <div class="theory-item">
+      <div class="theory-year">1856 – 1915</div>
+      <div class="theory-name">Frederick Taylor — Teoría Científica</div>
+      <p class="theory-desc">Centro de preocupación: la situación del taller. Buscó hacer <em>"más eficiente el esfuerzo humano"</em> eliminando la ineficiencia y la lentitud. Propuso la ciencia de medición del trabajo, la selección científica del personal y la responsabilidad compartida. Se lo critica por la <strong>deshumanización</strong> del trabajador.</p>
+      <div class="theory-tags">
+        <span class="tag tag-gold">Administración científica</span>
+        <span class="tag tag-gold">Medición del trabajo</span>
+        <span class="tag tag-gold">Incentivos económicos</span>
+        <span class="tag tag-red">Deshumanización</span>
+      </div>
+    </div>
+
+    <div class="theory-item">
+      <div class="theory-year">1841 – 1925</div>
+      <div class="theory-name">Henry Fayol — Teoría Funcional</div>
+      <p class="theory-desc">Elevó la práctica administrativa a sistema. Sostuvo que la administración se puede <strong>enseñar</strong> una vez que se comprenden sus principios básicos. Definió 6 funciones de la empresa y 14 principios de administración clásicos: división del trabajo, unidad de mando, cadena jerárquica, iniciativa, espíritu de equipo, entre otros.</p>
+      <div class="theory-tags">
+        <span class="tag tag-gold">14 principios</span>
+        <span class="tag tag-gold">6 funciones</span>
+        <span class="tag tag-gold">Previsión·Org·Dir·Control</span>
+      </div>
+    </div>
+
+    <div class="theory-item">
+      <div class="theory-year">1864 – 1920</div>
+      <div class="theory-name">Max Weber — Teoría Burocrática</div>
+      <p class="theory-desc">Basado en poder y legitimación. Identificó tres tipos de autoridad: <em>tradicional, carismática</em> y <em>racional-legal (burocrática)</em>. Afirmó que <em>"la mejor forma de organización es la que tiene reglas claras y racionales, decisiones impersonales y excelencia técnica"</em>.</p>
+      <div class="theory-tags">
+        <span class="tag tag-purple">Autoridad racional-legal</span>
+        <span class="tag tag-purple">Jerarquía</span>
+        <span class="tag tag-purple">Especialización</span>
+      </div>
+    </div>
+
+    <div class="theory-item">
+      <div class="theory-year">1880 – 1949</div>
+      <div class="theory-name">Elton Mayo — Escuela de las Relaciones Humanas</div>
+      <p class="theory-desc">Descubrió que la productividad estaba influenciada por las <strong>condiciones laborales y las relaciones humanas</strong>, no solo por factores físicos. Sus experimentos en Hawthorne revelaron que el "sentido de pertenencia", la moral del empleado y el liderazgo participativo son factores clave. Las organizaciones no son máquinas.</p>
+      <div class="theory-tags">
+        <span class="tag tag-cyan">Condiciones laborales</span>
+        <span class="tag tag-cyan">Motivación</span>
+        <span class="tag tag-cyan">Sentido de pertenencia</span>
+        <span class="tag tag-cyan">Liderazgo participativo</span>
+      </div>
+    </div>
+
+    <div class="theory-item">
+      <div class="theory-year">1908 – 1970</div>
+      <div class="theory-name">Abraham Maslow — Teoría del Comportamiento</div>
+      <p class="theory-desc">Psicólogo humanista que buscó incrementar la productividad a través de la <strong>autorrealización</strong>. Propuso una jerarquía de necesidades: fisiológicas → seguridad → afiliación → reconocimiento → autorrealización. Cada vez que se satisface una necesidad, la siguiente adquiere carácter dominante.</p>
+      <div class="theory-tags">
+        <span class="tag tag-green">Jerarquía de necesidades</span>
+        <span class="tag tag-green">Autorrealización</span>
+        <span class="tag tag-green">Motivación intrínseca</span>
+      </div>
+    </div>
+
+    <div class="theory-item">
+      <div class="theory-year">1906 – 1964</div>
+      <div class="theory-name">Douglas McGregor — Teoría X / Teoría Y</div>
+      <p class="theory-desc">Describió dos visiones extremas del trabajador. <strong>Teoría X</strong>: el trabajador no quiere trabajar, evita responsabilidades y necesita control. <strong>Teoría Y</strong>: el trabajador tiene iniciativa, se auto-dirige si acepta los objetivos y usa potencial intelectual mayor al que normalmente se le reconoce.</p>
+      <div class="theory-tags">
+        <span class="tag tag-red">Teoría X · Control</span>
+        <span class="tag tag-green">Teoría Y · Participación</span>
+        <span class="tag tag-gold">Liderazgo</span>
+      </div>
+    </div>
+
+    <div class="theory-item">
+      <div class="theory-year">1901 – 1972</div>
+      <div class="theory-name">Ludwig Von Bertalanffy — Teoría General de Sistemas</div>
+      <p class="theory-desc">Planteó que las organizaciones son <strong>sistemas socio-técnicos</strong> incluidos en un sistema mayor que es la sociedad. Existen propiedades que emergen en el sistema y que no están en sus componentes aislados. Base del pensamiento sistémico moderno y del modelo de Katz y Kahn.</p>
+      <div class="theory-tags">
+        <span class="tag tag-purple">Sistemas abiertos</span>
+        <span class="tag tag-purple">Sinergia</span>
+        <span class="tag tag-purple">Retroalimentación</span>
+        <span class="tag tag-purple">Homeostasis</span>
+      </div>
+    </div>
+
+    <div class="theory-item">
+      <div class="theory-year">Siglo XX</div>
+      <div class="theory-name">Peter Drucker — Escuela Empírica</div>
+      <p class="theory-desc">Propuso una administración basada en la <strong>observación y el análisis de casos exitosos</strong>. Énfasis en mercadotecnia, administración por objetivos, planificación a largo plazo y resultados. Puso en el centro la administración de personal de alta calidad.</p>
+      <div class="theory-tags">
+        <span class="tag tag-gold">Administración por objetivos</span>
+        <span class="tag tag-gold">Planificación estratégica</span>
+        <span class="tag tag-gold">Mercadotecnia</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Cuadro comparativo -->
+  <div class="divider"><div class="divider-line"></div><div class="divider-label">Comparativo Rápido</div><div class="divider-line"></div></div>
+  <div class="rules-panel">
+    <h3>✦ ¿En qué se diferencia cada escuela?</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px">
+      <div class="rule-item"><span class="rule-check">◈</span><p><strong style="color:var(--gold)">Taylor:</strong> foco en el taller y la eficiencia física del trabajo</p></div>
+      <div class="rule-item"><span class="rule-check">◈</span><p><strong style="color:var(--gold)">Fayol:</strong> foco en la dirección y los principios de la organización total</p></div>
+      <div class="rule-item"><span class="rule-check">◈</span><p><strong style="color:var(--purple)">Weber:</strong> foco en la autoridad legítima y las reglas formales</p></div>
+      <div class="rule-item"><span class="rule-check">◈</span><p><strong style="color:var(--cyan)">Mayo:</strong> foco en las personas, la motivación y el grupo informal</p></div>
+      <div class="rule-item"><span class="rule-check">◈</span><p><strong style="color:var(--green)">Maslow/McGregor:</strong> foco en las necesidades humanas y el potencial</p></div>
+      <div class="rule-item"><span class="rule-check">◈</span><p><strong style="color:var(--purple)">Von Bertalanffy:</strong> foco en la organización como sistema abierto e integrado</p></div>
+    </div>
+  </div>
+
+</div></section>
+
+<!-- ══ FOOTER ══ -->
+<footer style="text-align:center;padding:40px 20px;border-top:1px solid var(--border);margin-top:20px">
+  <p style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.15em;color:var(--text-faint);text-transform:uppercase">
+    UNNOBA · Escuela de Tecnología · Sistemas y Organizaciones · Primer Año · Primer Cuatrimestre
+  </p>
+</footer>
+
+<script>
+  function showTab(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.currentTarget.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function revealFoda() {
+    const el = document.getElementById('fodaAnswer');
+    el.classList.add('visible');
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+</script>
+</body>
+</html>
